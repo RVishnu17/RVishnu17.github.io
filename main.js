@@ -4,7 +4,7 @@ import * as THREE from 'https://unpkg.com/three@0.127.0/build/three.module.js';
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
-camera.position.set(0,0,50);
+camera.position.set(0,0,20);
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
 document.body.appendChild( renderer.domElement );
@@ -70,7 +70,7 @@ const moonOrbit = new THREE.Object3D();
 moonOrbit.position.x = -2;
 moonOrbit.add(moonMesh);
 earthorbit.add(moonOrbit);
-sunMesh.add(line);
+//sunMesh.add(line);
 objects.push(earthorbit);
 objects.push(moonOrbit);
 
@@ -78,6 +78,10 @@ objects.push(moonOrbit);
 function animate() {
 objects.forEach((i) => {
 i.rotation.z += 0.01;
+const axes = new THREE.AxesHelper();
+axes.material.depthTest = false;
+axes.renderOrder = 1;
+i.add(axes);
 });
 	renderer.render( scene, camera );
 
