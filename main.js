@@ -4,18 +4,11 @@ import * as THREE from 'https://unpkg.com/three@0.127.0/build/three.module.js';
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
-camera.position.set(0,0,20);
-//camera.up.set(0,0,1);
-//camera.lookAt(0,0,0);
+camera.position.set(0,0,50);
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
-//renderer.setAnimationLoop( animate );
 document.body.appendChild( renderer.domElement );
 
-const geometry = new THREE.BoxGeometry( 1, 1, 1 );
-const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-const cube = new THREE.Mesh( geometry, material );
-//scene.add( cube );
 
 // Line material
 // Hello World ! 
@@ -28,7 +21,7 @@ pts.push(new THREE.Vector3(0, -3*5, 0));
 pts.push(new THREE.Vector3(3*5, 0, 0));
 pts.push(new THREE.Vector3(0, 3*5, 0));
 
-const light  = new THREE.PointLight(0xFFFFFF, 50);
+const light  = new THREE.PointLight(0xFFFFFF, 3);
 const lgeom = new THREE.BufferGeometry().setFromPoints(pts);
 const line = new THREE.Line(lgeom, lmat);
 
@@ -46,37 +39,46 @@ renderer.setAnimationLoop(animate);
 }, undefined, function(err){
 console.error(err);
 });*/
+const subroot = new THREE.Object3D();
+scene.add(subroot);
+
 const objects = [];
- 
+ objects.push(subroot);
 // use just one sphere for everything
 const radius = 1;
-const widthSegments = 6;
-const heightSegments = 6;
+const widthSegments = 12;
+const heightSegments = 12;
 const sphereGeometry = new THREE.SphereGeometry(
     radius, widthSegments, heightSegments);
- 
+const earthorbit = new THREE.Object3D();
+earthorbit.position.x = 10;
+subroot.add(earthorbit); 
 const sunMaterial = new THREE.MeshPhongMaterial({emissive: 0xFFFF00});
 const sunMesh = new THREE.Mesh(sphereGeometry, sunMaterial);
-sunMesh.scale.set(1, 1, 1);  // make the sun large
-scene.add(sunMesh);
-objects.push(sunMesh);
+sunMesh.scale.set(3, 3, 3);  // make the sun large
+subroot.add(sunMesh);
+
+const moonmaterial = new THREE.MeshPhongMaterial({emissive: 0xFFFFFF});
+const moonMesh= new THREE.Mesh(sphereGeometry, moonmaterial);
+moonMesh.scale.set(0.3,0.3,0.3);
+//objects.push(sunMesh);
       const earthMaterial = new THREE.MeshPhongMaterial({color: 0x2233FF, emissive: 0x112244});
     const earthMesh = new THREE.Mesh(sphereGeometry, earthMaterial);
-    earthMesh.position.x = 10;
-    //scene.add(earthMesh);
-    objects.push(earthMesh);
-	sunMesh.add(earthMesh);
+earthorbit.add(earthMesh);
+
+const moonOrbit = new THREE.Object3D();
+moonOrbit.position.x = -2;
+moonOrbit.add(moonMesh);
+earthorbit.add(moonOrbit);
 sunMesh.add(line);
-    renderer.setAnimationLoop(animate);
+objects.push(earthorbit);
+objects.push(moonOrbit);
+
+   renderer.setAnimationLoop(animate);
 function animate() {
 objects.forEach((i) => {
 i.rotation.z += 0.01;
 });
-//	spheremesh.rotation.z +=0.009;
-//	mon.rotation.x += 0.01;
-//	line.rotation.z +=0.007;
-//	cube.rotation.x += 0.01;
-//	cube.rotation.y += 0.01;
 	renderer.render( scene, camera );
 
 }
