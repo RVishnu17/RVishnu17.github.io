@@ -24,9 +24,10 @@ pts.push(new THREE.Vector3(0, 3*5, 0));
 const light  = new THREE.PointLight(0xFFFFFF, 3);
 const lgeom = new THREE.BufferGeometry().setFromPoints(pts);
 const line = new THREE.Line(lgeom, lmat);
-
-scene.add(line);
+const line1 = new THREE.Line(lgeom, lmat);
+const line2 = new THREE.Line(lgeom, lmat);
 scene.add(light);
+scene.add(line1);
 //camera.position.z = 5;
 /*var mon;
 const loader = new GLTFLoader();
@@ -65,22 +66,24 @@ moonMesh.scale.set(0.3,0.3,0.3);
       const earthMaterial = new THREE.MeshPhongMaterial({color: 0x2233FF, emissive: 0x112244});
     const earthMesh = new THREE.Mesh(sphereGeometry, earthMaterial);
 earthorbit.add(earthMesh);
-
+earthorbit.add(line);
 const moonOrbit = new THREE.Object3D();
 moonOrbit.position.x = -2;
 moonOrbit.add(moonMesh);
+moonOrbit.add(line2);
 earthorbit.add(moonOrbit);
 //sunMesh.add(line);
 objects.push(earthorbit);
 objects.push(moonOrbit);
+const axes = new THREE.AxesHelper();
+axes.material.depthTest = false;
+axes.renderOrder = 1;
 
    renderer.setAnimationLoop(animate);
 function animate() {
 objects.forEach((i) => {
 i.rotation.z += 0.01;
-const axes = new THREE.AxesHelper();
-axes.material.depthTest = false;
-axes.renderOrder = 1;
+line1.rotation.z +=0.01;
 i.add(axes);
 });
 	renderer.render( scene, camera );
