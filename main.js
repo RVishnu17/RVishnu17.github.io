@@ -7,7 +7,7 @@ const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.inner
 camera.position.set(0,0,20);
 const canvas = document.querySelector("#c");
 const renderer = new THREE.WebGLRenderer({antialias: true, canvas});
-renderer.setSize( window.innerWidth, window.innerHeight );
+renderer.setSize( window.innerWidth, window.innerHeight, false );
 document.body.appendChild( renderer.domElement );
 
 // Line material
@@ -79,13 +79,32 @@ const axes = new THREE.AxesHelper();
 axes.material.depthTest = false;
 axes.renderOrder = 1;
 
+window.addEventListener("resize", () => resp(renderer));
    renderer.setAnimationLoop(animate);
 function animate() {
+resp(renderer);
 objects.forEach((i) => {
 i.rotation.z += 0.01;
 line1.rotation.z +=0.01;
 i.add(axes);
 });
-	renderer.render( scene, camera );
 
+
+	renderer.render( scene, camera );
 }
+
+function resp(renderer) {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    const needResize = renderer.domElement.width !== width || renderer.domElement.height !== height;
+
+    if (needResize) {
+  renderer.setSize(width, height, false);
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+ }
+
+    return needResize;
+}
+
+
